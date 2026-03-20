@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Converter Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1><i class="fas fa-sync-alt"></i> Image Converter Pro</h1>
+      <div class="actions">
+        <button id="add-files" title="Add Images">
+          <i class="fas fa-plus"></i> Add Files
+        </button>
+        <button id="add-folder" title="Add Directory">
+          <i class="fas fa-folder-plus"></i> Add Folder
+        </button>
+        <button id="clear-list" class="secondary" title="Clear All">
+          <i class="fas fa-trash-alt"></i> Clear List
+        </button>
+      </div>
+
+      <div class="list-header">
+        <div class="col-thumb">Preview</div>
+        <div class="col-name">Filename</div>
+        <div class="col-format">Format</div>
+        <div class="col-status">Status</div>
+        <div class="col-action"></div>
+      </div>
+    </header>
+    <main id="file-list" class="list-view">
+      <div class="empty-state">
+        <i class="fas fa-images"></i>
+        <p>Select images to start converting</p>
+      </div>
+    </main>
+    <footer>
+      <div class="selectors">
+        <div class="selector-group">
+          <label>Target Format</label>
+          <select id="target-format">
+            <optgroup label="Common Formats">
+              <option value="PNG">PNG</option>
+              <option value="JPG">JPG / JPEG</option>
+              <option value="BMP">BMP</option>
+              <option value="GIF">GIF</option>
+              <option value="TIF">TIFF</option>
+              <option value="TGA">TGA</option>
+              <option value="ICO">ICO</option>
+            </optgroup>
+            <optgroup label="Game Formats">
+              <option value="DDJ" selected>DDJ (Silkroad)</option>
+              <option value="DDS">DDS (DXT5/BC3)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="selector-group">
+          <label>Save Directory</label>
+          <div class="input-with-btn">
+            <input type="text" id="save-dir" placeholder="Choose destination folder..." readonly />
+            <div class="save-actions">
+              <button id="browse-save-dir" class="secondary" title="Browse Folder">
+                <i class="fas fa-folder-open"></i> Browse
+              </button>
+              <button id="open-save-dir" class="secondary" title="Open Folder">
+                <i class="fas fa-external-link-alt"></i> Open
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="convert-btn" class="primary"><i class="fas fa-bolt"></i> Convert All</button>
+    </footer>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>
