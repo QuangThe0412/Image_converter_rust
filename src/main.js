@@ -49,19 +49,34 @@ async function updateFileList() {
     const name = file.split(/[\\/]/).pop();
     const ext = file.split(".").pop().toUpperCase();
 
+    const nameContainer = document.createElement("div");
+    nameContainer.className = "file-name col-name";
+    nameContainer.title = file;
+    nameContainer.textContent = name;
+
+    const extContainer = document.createElement("div");
+    extContainer.className = "file-ext col-format";
+    extContainer.textContent = ext;
+
+    const statusBadge = document.createElement("div");
+    statusBadge.className = "status-badge status-pending col-status";
+    statusBadge.textContent = "Pending";
+
     card.innerHTML = `
             <div class="preview-container col-thumb">
                 <i class="fas fa-spinner fa-spin" style="color: var(--text-secondary)"></i>
             </div>
-            <div class="file-info">
-                <div class="file-name col-name" title="${file}">${name}</div>
-                <div class="file-ext col-format">${ext}</div>
-                <div class="status-badge status-pending col-status">Pending</div>
-            </div>
+            <div class="file-info"></div>
             <div class="btn-remove col-action" data-index="${index}" title="Remove from list">
                 <i class="fas fa-times"></i>
             </div>
         `;
+    
+    const infoContainer = card.querySelector(".file-info");
+    infoContainer.appendChild(nameContainer);
+    infoContainer.appendChild(extContainer);
+    infoContainer.appendChild(statusBadge);
+    
     fileList.appendChild(card);
 
     // Load preview asynchronously
@@ -154,24 +169,21 @@ convertBtn.addEventListener("click", async () => {
 
   const targetFormat = targetFormatSelect.value;
   const cards = document.querySelectorAll(".file-card");
-
-  for (let i = 0; i < selectedFiles.length; i++) {
-    const file = selectedFiles[i];
+  const CONCURRENCY_LIMIT = 4;
+  
+  const tasks = selectedFiles.map((file, i) => async () => {
     const card = cards[i];
-    if (!card) continue;
+    if (!card) return;
 
     const statusEl = card.querySelector(".status-badge");
     const sourceExt = file.split(".").pop().toLowerCase();
     const targetExt = targetFormat.toLowerCase();
 
-    // Normalization for JPG/JPEG
     const isJpgMatch = (sourceExt === "jpg" || sourceExt === "jpeg") && (targetExt === "jpg" || targetExt === "jpeg");
-    const isSameFormat = sourceExt === targetExt || isJpgMatch;
-
-    if (isSameFormat) {
+    if (sourceExt === targetExt || isJpgMatch) {
       statusEl.textContent = "Skipped";
       statusEl.className = "status-badge status-success";
-      continue;
+      return;
     }
 
     statusEl.textContent = "Converting...";
@@ -190,14 +202,25 @@ convertBtn.addEventListener("click", async () => {
       } else {
         statusEl.textContent = "Error";
         statusEl.className = "status-badge status-error";
-        console.error("Conversion error result:", result.error);
+        console.error("Conversion error:", result.error);
       }
     } catch (err) {
       statusEl.textContent = "Failed";
       statusEl.className = "status-badge status-error";
       console.error("Conversion catch error:", err);
     }
+  });
+
+  // Simple parallel execution with limit
+  const executing = [];
+  for (const task of tasks) {
+    const p = task().then(() => executing.splice(executing.indexOf(p), 1));
+    executing.push(p);
+    if (executing.length >= CONCURRENCY_LIMIT) {
+      await Promise.race(executing);
+    }
   }
+  await Promise.all(executing);
 
   convertBtn.disabled = false;
   convertBtn.innerHTML = `<i class="fas fa-bolt"></i> Convert All`;
