@@ -1,4 +1,4 @@
-use image::{DynamicImage, ImageOutputFormat, ImageBuffer, Rgba, Rgb, GenericImageView};
+use image::{DynamicImage, ImageOutputFormat, ImageBuffer, Rgba, Rgb};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{Read, Write, Cursor};
