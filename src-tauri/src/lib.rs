@@ -65,6 +65,13 @@ pub struct ConversionResult {
     pub error: Option<String>,
 }
 
+#[derive(Serialize, Deserialize)]
+pub struct ResizeOptions {
+    pub active: bool,
+    pub width: u32,
+    pub height: u32,
+}
+
 fn read_dds_content(path: &str) -> anyhow::Result<DynamicImage> {
     let mut file = std::fs::File::open(path)?;
     let mut buffer = Vec::new();
@@ -227,13 +234,23 @@ async fn get_image_preview(path: String) -> Result<ImageMetadata, String> {
 }
 
 #[tauri::command]
-async fn convert_image(path: String, target_format: String, save_dir: String) -> ConversionResult {
+async fn convert_image(
+    path: String, 
+    target_format: String, 
+    save_dir: String,
+    resize: ResizeOptions
+) -> ConversionResult {
     let filename = Path::new(&path).file_stem().and_then(|s| s.to_str()).unwrap_or("unknown");
     let target_path = Path::new(&save_dir).join(format!("{}.{}", filename, target_format.to_lowercase()));
     
     let result = (|| -> Result<()> {
-        let img = load_image_any(&path)?;
-        
+        let mut img = load_image_any(&path)?;
+
+        // Apply resize if active
+        if resize.active {
+            img = img.resize_exact(resize.width, resize.height, image::imageops::FilterType::Lanczos3);
+        }
+                
         match target_format.to_lowercase().as_str() {
             "ddj" | "dds" => {
                 let padded_img = pad_to_power_of_two(img);

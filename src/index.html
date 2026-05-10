@@ -61,6 +61,17 @@
           </select>
         </div>
         <div class="selector-group">
+          <div class="resize-toggle">
+            <input type="checkbox" id="resize-active" />
+            <label for="resize-active">Resize</label>
+          </div>
+          <div class="resize-inputs">
+            <input type="number" id="resize-width" value="64" min="1" max="8192" disabled />
+            <span>×</span>
+            <input type="number" id="resize-height" value="64" min="1" max="8192" disabled />
+          </div>
+        </div>
+        <div class="selector-group">
           <label>Save Directory</label>
           <div class="input-with-btn">
             <input type="text" id="save-dir" placeholder="Choose destination folder..." readonly />

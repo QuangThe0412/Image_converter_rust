@@ -485,6 +485,96 @@ input[type="text"] {
   align-items: center;
 }
 
+.resize-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.resize-toggle input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.resize-toggle input[type="checkbox"]:checked {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.resize-toggle input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.resize-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 4px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.resize-inputs:has(input:not(:disabled)):hover {
+  border-color: rgba(6, 182, 212, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.resize-inputs:has(input:focus) {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--accent-glow);
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.resize-inputs input[type="number"] {
+  width: 50px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  padding: 4px 0;
+  transition: color 0.3s ease;
+}
+
+.resize-inputs input[type="number"]::-webkit-inner-spin-button,
+.resize-inputs input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.resize-inputs input[type="number"]:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.resize-inputs span {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0.5;
+}
+
 select:focus,
 input[type="text"]:focus {
   border-color: var(--accent-color);

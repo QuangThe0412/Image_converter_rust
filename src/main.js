@@ -17,6 +17,16 @@ const browseSaveDirBtn = document.getElementById("browse-save-dir");
 const openSaveDirBtn = document.getElementById("open-save-dir");
 const convertBtn = document.getElementById("convert-btn");
 
+const resizeActiveCheck = document.getElementById("resize-active");
+const resizeWidthInput = document.getElementById("resize-width");
+const resizeHeightInput = document.getElementById("resize-height");
+
+resizeActiveCheck.addEventListener("change", () => {
+  const active = resizeActiveCheck.checked;
+  resizeWidthInput.disabled = !active;
+  resizeHeightInput.disabled = !active;
+});
+
 openSaveDirBtn.addEventListener("click", async () => {
   const saveDir = saveDirInput.value;
   if (saveDir) {
@@ -193,7 +203,12 @@ convertBtn.addEventListener("click", async () => {
       const result = await invoke("convert_image", {
         path: file,
         targetFormat,
-        saveDir
+        saveDir,
+        resize: {
+          active: resizeActiveCheck.checked,
+          width: parseInt(resizeWidthInput.value) || 64,
+          height: parseInt(resizeHeightInput.value) || 64
+        }
       });
 
       if (result.success) {
